@@ -9,10 +9,9 @@ export const middleware: NextMiddleware = async (req: NextRequest) => {
 
     if (
       item.name.startsWith("accessToken") ||
-      item.name.startsWith("refreshToken") ||
-      item.name.startsWith("userData")
+      item.name.startsWith("refreshToken")
     ) {
-      res.cookies.delete(item.name);
+      res.cookies.set(item.name, "", { domain: ".deliverio.cz" });
     }
   });
 
